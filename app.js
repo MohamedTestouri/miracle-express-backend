@@ -25,8 +25,8 @@ app.get('*', function (req, res) {
     return res.status(404).json({message: "404 Not Found"});
 });
 
-// Define a route for the /test endpoint and return a "Hello World" message
-app.get("/test", (req, res) => {
+// Define a route for the /hello endpoint and return a "Hello World" message
+app.get("/hello", (req, res) => {
     return res.status(200).json({message: "Hello World!"});
 });
 
