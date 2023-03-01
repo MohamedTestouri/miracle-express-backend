@@ -1,6 +1,12 @@
-// Import the Express framework and create a new router object
 const express = require("express");
 const router = express.Router();
 
-// Export the router object as a module
+const userRoute = require("./user.route");
+const productRoute = require("./product.route");
+const uploadRoute = require("./upload.route");
+
+router.use("/user", userRoute);
+router.use("/product", productRoute);
+router.use("/upload", uploadRoute);
+
 module.exports = router;

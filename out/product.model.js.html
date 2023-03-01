@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: product.model.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: product.model.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const mongoose = require("mongoose");
+/**
+
+ Possible sizes of the product.
+ @readonly
+ @enum {string}
+ @memberof module:models/product
+ */
+const sizes = {
+  XXXS: "XXXS",
+  XXS: "XXS",
+  XS: "XS",
+  S: "S",
+  M: "M",
+  L: "L",
+  XL: "XL",
+  XXL: "XXL",
+  XXXL: "XXXL",
+};
+/**
+
+ @typedef {Object} VariationSize
+ @property {string} name - The size name. Should be one of the sizes enum.
+ @property {number} stock - The quantity of this size in the stock.
+ */
+/**
+
+ @typedef {Object} Variation
+ @property {mongoose.Types.ObjectId} _id - The unique identifier of the variation.
+ @property {string} color - The color of the variation.
+ @property {VariationSize[]} size - The array of sizes available for this variation.
+ */
+/**
+
+ @typedef {Object} Product
+ @property {mongoose.Types.ObjectId} _id - The unique identifier of the product.
+ @property {string} name - The name of the product.
+ @property {number} price - The price of the product.
+ @property {mongoose.Types.ObjectId} promotion - The promotion related to this product.
+ @property {boolean} new - Indicates if the product is new.
+ @property {mongoose.Types.ObjectId[]} feedbacks - The feedbacks related to this product.
+ @property {number} saleCount - The amount of times the product has been sold.
+ @property {mongoose.Types.ObjectId} category - The category of the product.
+ @property {string[]} tag - The array of tags related to the product.
+ @property {Variation[]} variation - The array of variations available for the product.
+ @property {string} description - The description of the product.
+ @property {string[]} images - The array of URLs of the product's images.
+ @property {boolean} isHidden - Indicates if the product is hidden.
+ @property {boolean} isApproved - Indicates if the product is approved.
+ @property {boolean} isSponsored - Indicates if the product is sponsored.
+ @property {Date} updatedAt - The date of the last update of the product.
+ @property {number} point - The point of the product.
+ @property {mongoose.Types.ObjectId} business - The business related to the product.
+ */
+/**
+ Mongoose schema for the Product model.
+ @type {mongoose.Schema&lt;Product>}
+ @const
+ @namespace ProductSchema
+ @memberof module:models/product
+ */
+
+const product = {
+  _id: mongoose.Schema.Types.ObjectId,
+  name: {
+    type: String,
+    isRequired: true,
+    notEmpty: {
+      negated: false,
+      errorMessage: "name field is required",
+    },
+  },
+  price: {
+    type: Number,
+    isRequired: true,
+    notEmpty: {
+      negated: false,
+      errorMessage: "price field is required",
+    },
+  },
+  promotion: { isRequired: false, type: mongoose.Schema.Types.ObjectId, ref: "Promotion" },
+  new: { type: Boolean, default: true },
+  feedbacks: [
+    {
+      ref: "Feedback",
+      type: mongoose.Schema.Types.ObjectId,
+      isRequired: false,
+    },
+  ],
+  saleCount: { type: Number, default: 0 },
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
+  tag: [{ type: String }],
+  variation: [
+    {
+      _id: mongoose.Schema.Types.ObjectId,
+      color: { type: String },
+     // images: [{ type: String }],
+      size: [{ name: { type: String, enum: sizes }, stock: { type: Number } }],
+    },
+  ],
+  description: {
+    type: String,
+    isRequired: true,
+    notEmpty: {
+      negated: false,
+      errorMessage: "description field is required",
+    },
+  },
+  /*quantity: {
+    type: Number,
+    isRequired: true,
+    notEmpty: {
+      negated: false,
+      errorMessage: "quantity field is required",
+    },
+    isNumeric: true,
+    errorMessage: "please enter a number",
+  },*/
+
+  images: [{
+    type: String,
+    isRequired: true,
+    notEmpty: {
+      negated: false,
+      errorMessage: "image field is required",
+    },
+  }],
+ // viewsNumber: { type: Number, default: 0 },
+  isHidden: { type: Boolean, default: false },
+  isApproved: { type: Boolean, default: false },
+  isSponsored: { type: Boolean, default: false },
+  updatedAt: { type: Date, default: Date.now },
+  point: { type: Number },
+  business: { type: mongoose.Schema.Types.ObjectId, ref: "Business" },
+};
+
+const productSchema = mongoose.Schema(product);
+
+const Product = mongoose.model("Product", productSchema);
+
+module.exports = { Product, product };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="module-models_product.ProductSchema.html">ProductSchema</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Feb 26 2023 15:49:13 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

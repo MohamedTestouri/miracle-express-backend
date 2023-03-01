@@ -1,0 +1,30 @@
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    const lastIndex = file.originalname.lastIndexOf(".");
+    cb(
+      null,
+      file.originalname.slice(0, lastIndex) +
+        "-" +
+        Date.now() +
+        file.originalname.slice(lastIndex)
+    );
+  },
+});
+
+const uploadMultiple = multer({ storage: storage }).array("images", 5); // allow upload max 5 files
+
+const uploadMultipleImages = (req, res) => {
+  /*if (req.files == null) {
+    return res
+      .status(500)
+      .json({ error: "Please select atleast one image to upload" });
+  }*/
+  return req.files;
+};
+
+module.exports = { uploadMultiple, uploadMultipleImages };

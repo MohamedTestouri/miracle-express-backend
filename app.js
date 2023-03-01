@@ -1,34 +1,37 @@
-// Import the Express and Mongoose modules
 const express = require("express");
+var app = express();
+const bodyParser = require("body-parser");
+require("dotenv").config();
 const mongoose = require("mongoose");
 
-// Create an Express app
-const app = express();
+const cors = require('cors');
 
-// Load environment variables
-require("dotenv").config();
 
-// Connect to MongoDB using the connection string from the environment variable DB
-mongoose.connect(process.env.DB)
-    .then(() => {
-        console.log("Successfully connected to MongoDB.");
-    });
+// enable CORS for all routes
+app.use(cors());
 
-// Import the router from the index.route file in the src/routes directory
+// connect to database
+mongoose
+  .connect("mongodb+srv://su-me:d3iqPNc9DWCQsu6B@miracleexpresscluster.f1fkmjy.mongodb.net/?retryWrites=true&w=majority")
+  .then(() => {
+    console.log("Successfully connected to MongoDB.");
+  });
+
+// app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.use(express.static("uploads"));
+app.use("/uploads", express.static("uploads"));
+
+app.use(express.static("out"));
+app.use("/doc", express.static("out"));
+
+app.get("/hello", (req, res) => {
+  return res.status(200).json({ message: "Hello World!" });
+});
+
 const router = require("./src/routes/index.route");
-
-// Use the router to handle API requests at the /api endpoint
 app.use("/api", router);
 
-// Return a 404 error for any other routes that were not defined
-app.get('*', function (req, res) {
-    return res.status(404).json({message: "404 Not Found"});
-});
-
-// Define a route for the /hello endpoint and return a "Hello World" message
-app.get("/hello", (req, res) => {
-    return res.status(200).json({message: "Hello World!"});
-});
-
-// Export the Express app
 module.exports = app;
